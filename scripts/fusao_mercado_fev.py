@@ -10,7 +10,7 @@ def leitura_json(path_json):
 def leitura_csv(path_csv):
 
     dados_csv = []
-    with open(path_csv, 'r') as file:
+    with open(path_csv, 'r', encoding='utf-8-sig') as file:
         spamreader = csv.DictReader(file, delimiter=',')
         for row in spamreader:
             dados_csv.append(row)
@@ -64,7 +64,7 @@ def transformando_dados_tabela(dados, nomes_colunas):
     return dados_combinados_tabela
 
 def salvando_dados(dados, path):
-    with open(path, 'w') as file:
+    with open(path, 'w', encoding='utf-8-sig') as file:
         writer = csv.writer(file)
         writer.writerows(dados)
 
@@ -83,10 +83,11 @@ print(f"Tamanho dos dados json: {tamanho_dados_json}")
 dados_csv = leitura_dados(path_csv, 'csv')
 nome_colunas_csv = get_columns(dados_csv)
 tamanho_dados_csv = size_data(dados_csv)
-print(nome_colunas_csv)
-print(tamanho_dados_csv)
 
-#Transformacao dos dados
+print(f'Nome colunas dados csv: {nome_colunas_csv}')
+print(f'Tamanho dos dados csv: {tamanho_dados_csv}')
+
+# Transformacao dos dados
 
 key_mapping = {'Nome do Item': 'Nome do Produto',
                 'Classificação do Produto': 'Categoria do Produto',
@@ -94,18 +95,19 @@ key_mapping = {'Nome do Item': 'Nome do Produto',
                 'Quantidade em Estoque': 'Quantidade em Estoque',
                 'Nome da Loja': 'Filial',
                 'Data da Venda': 'Data da Venda'}
+
 dados_csv = rename_columns(dados_csv, key_mapping)
 nome_colunas_csv = get_columns(dados_csv)
-print(nome_colunas_csv)
+print(f'Nome das colunas csv: {nome_colunas_csv}')
 
 dados_fusao = join(dados_json, dados_csv)
 nome_colunas_fusao = get_columns(dados_fusao)
 tamanho_dados_fusao = size_data(dados_fusao)
-print(nome_colunas_fusao)
-print(tamanho_dados_fusao)
+print(f'Nome das colunas fusao: {nome_colunas_fusao}')
+print(f'Tamanho dos dados fusao: {tamanho_dados_fusao}')
 
 
-#Salvando dados
+# Salvando dados
 
 dados_fusao_tabela = transformando_dados_tabela(dados_fusao, nome_colunas_fusao)
 
@@ -114,3 +116,4 @@ path_dados_combinados = 'data_processed/dados_combinados.csv'
 salvando_dados(dados_fusao_tabela, path_dados_combinados)
 
 print(path_dados_combinados)
+print(f'Dados salvos com sucesso em: {path_dados_combinados}')
